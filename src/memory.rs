@@ -1,5 +1,5 @@
 pub const MEMORY_SIZE: u64 = 1024 * 1024;
-const MEMORY_BASE_ADDRESS: u64 = 0x8000_0000;
+pub const MEMORY_BASE_ADDRESS: u64 = 0x8000_0000;
 
 pub struct Memory {
     pub memory: Vec<u8>,
