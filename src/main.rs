@@ -11,9 +11,13 @@ mod trap_handler;
 mod x;
 
 use csr::ControlAndStatusRegister;
-use decoder::{privileged::PrivilegedDecoder, rv32i::Rv32iDecoder, rv64i::Rv64iDecoder, Decoder};
+use decoder::{
+    privileged::PrivilegedDecoder, rv32i::Rv32iDecoder, rv64i::Rv64iDecoder, zicsr::ZicsrDecoder,
+    Decoder,
+};
 use executor::{
-    privileged::PrivilegedExecutor, rv32i::Rv32iExecutor, rv64i::Rv64iExecutor, Executor,
+    privileged::PrivilegedExecutor, rv32i::Rv32iExecutor, rv64i::Rv64iExecutor,
+    zicsr::ZicsrExecutor, Executor,
 };
 use memory::Memory;
 use mode::PrivilegeMode;
@@ -56,6 +60,7 @@ impl Simulator {
                     &self.prv,
                     &mut self.pc,
                     &mut self.x,
+                    &mut self.csr,
                     &mut self.memory,
                 )
             } else if let Some(decoded) = Rv32iDecoder::decode(instruction) {
@@ -64,6 +69,7 @@ impl Simulator {
                     &self.prv,
                     &mut self.pc,
                     &mut self.x,
+                    &mut self.csr,
                     &mut self.memory,
                 )
             } else if let Some(decoded) = Rv64iDecoder::decode(instruction) {
@@ -72,6 +78,16 @@ impl Simulator {
                     &self.prv,
                     &mut self.pc,
                     &mut self.x,
+                    &mut self.csr,
+                    &mut self.memory,
+                )
+            } else if let Some(decoded) = ZicsrDecoder::decode(instruction) {
+                ZicsrExecutor::execute(
+                    decoded,
+                    &self.prv,
+                    &mut self.pc,
+                    &mut self.x,
+                    &mut self.csr,
                     &mut self.memory,
                 )
             } else {

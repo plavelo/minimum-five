@@ -1,6 +1,7 @@
 use crate::{
     bitops::extend_sign,
     cause::Cause,
+    csr::ControlAndStatusRegister,
     executor::Executor,
     instruction::{
         rv64i::{
@@ -36,6 +37,7 @@ impl Executor for Rv64iExecutor {
         _: &PrivilegeMode,
         _: &mut ProgramCounter,
         x: &mut IntegerRegister,
+        _: &mut ControlAndStatusRegister,
         _: &mut Memory,
     ) -> Result<(), Cause> {
         match instruction {

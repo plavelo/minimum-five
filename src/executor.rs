@@ -1,10 +1,11 @@
 pub mod privileged;
 pub mod rv32i;
 pub mod rv64i;
+pub mod zicsr;
 
 use crate::{
-    cause::Cause, instruction::Instruction, memory::Memory, mode::PrivilegeMode,
-    pc::ProgramCounter, x::IntegerRegister,
+    cause::Cause, csr::ControlAndStatusRegister, instruction::Instruction, memory::Memory,
+    mode::PrivilegeMode, pc::ProgramCounter, x::IntegerRegister,
 };
 
 pub trait Executor {
@@ -28,6 +29,7 @@ pub trait Executor {
         prv: &PrivilegeMode,
         pc: &mut ProgramCounter,
         x: &mut IntegerRegister,
+        csr: &mut ControlAndStatusRegister,
         memory: &mut Memory,
     ) -> Result<(), Cause>;
 }

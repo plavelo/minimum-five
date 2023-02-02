@@ -1,5 +1,6 @@
 use crate::{
     cause::{Cause, Exception, ExceptionReturn},
+    csr::ControlAndStatusRegister,
     executor::Executor,
     instruction::{
         privileged::{
@@ -36,6 +37,7 @@ impl Executor for PrivilegedExecutor {
         prv: &PrivilegeMode,
         _: &mut ProgramCounter,
         _: &mut IntegerRegister,
+        _: &mut ControlAndStatusRegister,
         _: &mut Memory,
     ) -> Result<(), Cause> {
         if let Instruction::TypeR {
