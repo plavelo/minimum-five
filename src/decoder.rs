@@ -1,3 +1,4 @@
+mod privileged;
 mod rv32i;
 
 use crate::instruction::Instruction;
