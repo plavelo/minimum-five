@@ -54,15 +54,13 @@ impl ControlAndStatusRegister {
         if self.contains(address) {
             return self.csr[&address];
         }
-        panic!("address not found. {:x}", address);
+        0
     }
 
     fn write(&mut self, address: u64, value: u64) {
         if self.contains(address) {
             *self.csr.get_mut(&address).unwrap() = value;
-            return;
         }
-        panic!("address not found. {:x}", address);
     }
 
     pub fn csrrw(&mut self, address: u64, value: u64) -> u64 {
@@ -73,13 +71,13 @@ impl ControlAndStatusRegister {
 
     pub fn csrrs(&mut self, address: u64, value: u64) -> u64 {
         let t = self.read(address);
-        self.write(address, self.csr[&address] | value);
+        self.write(address, self.read(address) | value);
         t
     }
 
     pub fn csrrc(&mut self, address: u64, value: u64) -> u64 {
         let t = self.read(address);
-        self.write(address, self.csr[&address] & !value);
+        self.write(address, self.read(address) & !value);
         t
     }
 }

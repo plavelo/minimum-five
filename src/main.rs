@@ -10,23 +10,32 @@ mod pc;
 mod trap_handler;
 mod x;
 
-use csr::ControlAndStatusRegister;
-use decoder::{
-    privileged::PrivilegedDecoder, rv32i::Rv32iDecoder, rv64i::Rv64iDecoder, zicsr::ZicsrDecoder,
-    Decoder,
+use std::{
+    fs::File,
+    io::{BufReader, Read, Result},
 };
-use executor::{
-    privileged::PrivilegedExecutor, rv32i::Rv32iExecutor, rv64i::Rv64iExecutor,
-    zicsr::ZicsrExecutor, Executor,
-};
-use memory::Memory;
-use mode::PrivilegeMode;
-use pc::ProgramCounter;
-use trap_handler::handle_cause;
-use x::IntegerRegister;
 
-fn main() {
+use crate::{
+    csr::ControlAndStatusRegister,
+    decoder::{
+        privileged::PrivilegedDecoder, rv32i::Rv32iDecoder, rv64i::Rv64iDecoder,
+        zicsr::ZicsrDecoder, Decoder,
+    },
+    executor::{
+        privileged::PrivilegedExecutor, rv32i::Rv32iExecutor, rv64i::Rv64iExecutor,
+        zicsr::ZicsrExecutor, Executor,
+    },
+    memory::{Memory, MEMORY_BASE_ADDRESS},
+    mode::PrivilegeMode,
+    pc::ProgramCounter,
+    trap_handler::handle_cause,
+    x::IntegerRegister,
+};
+
+fn main() -> Result<()> {
+    let file = File::open("./riscv-tests/isa/rv64ui-p-add.bin")?;
     let mut simulator = Simulator::default();
+    simulator.load(file)?;
     let terminator = |simulator: &Simulator| {
         let value = simulator.memory.load(0x80001000);
         if value == 1 {
@@ -37,6 +46,7 @@ fn main() {
     };
     let result = simulator.run(terminator);
     println!("{}", if result == 1 { "PASS" } else { "FAIL" });
+    Ok(())
 }
 
 #[derive(Default)]
@@ -49,6 +59,15 @@ pub struct Simulator {
 }
 
 impl Simulator {
+    pub fn load(&mut self, file: File) -> Result<()> {
+        let buffer = BufReader::new(file);
+        for (address, byte) in buffer.bytes().enumerate() {
+            self.memory
+                .store(address as u64 + MEMORY_BASE_ADDRESS, byte? as u32);
+        }
+        Ok(())
+    }
+
     fn run(&mut self, terminator: impl Fn(&Simulator) -> Option<u64>) -> u64 {
         while self.pc.read() < self.memory.size() {
             let address = self.pc.read();

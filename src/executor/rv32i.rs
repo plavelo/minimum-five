@@ -62,7 +62,7 @@ impl Executor for Rv32iExecutor {
                 imm,
             } => match opcode {
                 Rv32iOpcodeI::Slli => {
-                    x.write(rd, x.read(rs1) << (imm << MASK_6BIT));
+                    x.write(rd, x.read(rs1) << (imm & MASK_6BIT));
                     Ok(())
                 }
                 Rv32iOpcodeI::Addi => {
