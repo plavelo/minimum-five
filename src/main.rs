@@ -1,3 +1,5 @@
+mod decoder;
+mod instruction;
 mod memory;
 mod pc;
 mod x;
