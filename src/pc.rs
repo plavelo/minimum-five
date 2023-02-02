@@ -24,4 +24,8 @@ impl ProgramCounter {
     pub fn jump(&mut self, address: u64) {
         self.pc = address;
     }
+
+    pub fn jumpr(&mut self, relative_address: i64) {
+        self.pc = (self.pc as i64 + relative_address) as u64;
+    }
 }

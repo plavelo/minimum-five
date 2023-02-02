@@ -1,6 +1,10 @@
+mod bitops;
+mod cause;
 mod decoder;
+mod executor;
 mod instruction;
 mod memory;
+mod mode;
 mod pc;
 mod x;
 
