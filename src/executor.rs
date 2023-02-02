@@ -1,5 +1,5 @@
-mod privileged;
-mod rv32i;
+pub mod privileged;
+pub mod rv32i;
 
 use crate::{
     cause::Cause, instruction::Instruction, memory::Memory, mode::PrivilegeMode,
