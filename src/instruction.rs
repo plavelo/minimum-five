@@ -1,5 +1,6 @@
 pub mod privileged;
 pub mod rv32i;
+pub mod rv64i;
 
 #[derive(Debug, PartialEq)]
 pub enum Instruction<OpcodeR, OpcodeI, OpcodeS, OpcodeB, OpcodeU, OpcodeJ> {

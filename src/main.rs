@@ -11,8 +11,10 @@ mod trap_handler;
 mod x;
 
 use csr::ControlAndStatusRegister;
-use decoder::{privileged::PrivilegedDecoder, rv32i::Rv32iDecoder, Decoder};
-use executor::{privileged::PrivilegedExecutor, rv32i::Rv32iExecutor, Executor};
+use decoder::{privileged::PrivilegedDecoder, rv32i::Rv32iDecoder, rv64i::Rv64iDecoder, Decoder};
+use executor::{
+    privileged::PrivilegedExecutor, rv32i::Rv32iExecutor, rv64i::Rv64iExecutor, Executor,
+};
 use memory::Memory;
 use mode::PrivilegeMode;
 use pc::ProgramCounter;
@@ -58,6 +60,14 @@ impl Simulator {
                 )
             } else if let Some(decoded) = Rv32iDecoder::decode(instruction) {
                 Rv32iExecutor::execute(
+                    decoded,
+                    &self.prv,
+                    &mut self.pc,
+                    &mut self.x,
+                    &mut self.memory,
+                )
+            } else if let Some(decoded) = Rv64iDecoder::decode(instruction) {
+                Rv64iExecutor::execute(
                     decoded,
                     &self.prv,
                     &mut self.pc,
