@@ -33,7 +33,7 @@ use crate::{
 };
 
 fn main() -> Result<()> {
-    let file = File::open("./riscv-tests/isa/rv64ui-p-add.bin")?;
+    let file = File::open("./tests/isa/rv64ui-p-add.bin")?;
     let mut simulator = Simulator::default();
     simulator.load(file)?;
     let terminator = |simulator: &Simulator| {
