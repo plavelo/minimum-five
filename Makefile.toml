@@ -1,0 +1,11 @@
+[env]
+TESTS_DIR = "${CARGO_MAKE_WORKING_DIRECTORY}/riscv-tests/isa"
+
+[tasks.buildtest]
+script = [
+    "git submodule update --init --recursive riscv-tests",
+    "cd ${TESTS_DIR}",
+    "make -j8 -s",
+    "find . -maxdepth 1 -not -type d -name 'rv*' -printf '%f\n' | grep -v '\\.' | xargs -I {} riscv64-unknown-elf-objcopy -O binary {} {}.bin",
+    "cp ${TESTS_DIR}/*.bin ${CARGO_MAKE_WORKING_DIRECTORY}/tests/isa/"
+]
