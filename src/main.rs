@@ -1,5 +1,6 @@
 mod memory;
 mod pc;
+mod x;
 
 use memory::Memory;
 use pc::ProgramCounter;
@@ -14,7 +15,8 @@ fn main() {
             None
         }
     };
-    simulator.run(terminator);
+    let result = simulator.run(terminator);
+    println!("{}", if result == 1 { "PASS" } else { "FAIL" });
 }
 
 #[derive(Default)]
