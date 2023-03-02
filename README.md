@@ -5,7 +5,7 @@ This simulator can only pass the rv64ui-p-add test.
 
 # Usage
 ```
-git clone git@github.com:plavelo/minimum-five.git
+git clone https://github.com/plavelo/minimum-five
 cd minimum-five
 cargo run
 ```
